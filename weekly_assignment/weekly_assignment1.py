@@ -8,7 +8,8 @@ class students:
      top_5_students=[]
      Personal_attention_list=[]
      Personal_attention_threshold=0
-
+     
+     # constructor for initialising objects or student records
      def __init__(self,name:str,age:int,gender:str,python_marks:int,dsa_marks:int,ml_marks:int):
           self.name=name
           self.age=age
@@ -17,18 +18,25 @@ class students:
           self.dsa_marks=dsa_marks
           self.ml_marks=ml_marks
      
+     # calculate average marks of all subjects
      def calculate_average_marks(self):
           return (self.python_marks+self.dsa_marks+self.ml_marks)//3
      
+     
+     # set the minimum and maximum threshold for sorting of students based on their average marks
      @classmethod
      def set_maximum_minimum_threshold(cls,mini,maxi):
           cls.min_marks=mini
           cls.max_marks=maxi
-     
+
+     # set the  threshold for selecting the students who need personal attention
      @classmethod
      def set_personal_attention_threshold(cls,p):
           cls.Personal_attention_threshold=p
      
+
+     # this function sort the students based on their averge marks into three lists namely above_max_threshold,
+     # below_min_threshold and in_between_max_min_threshold
      def sorting_students(self):
           avg=self.calculate_average_marks()
           if avg < students.min_marks:
@@ -38,6 +46,7 @@ class students:
           else:
                students.student_above_maximum_threshold.append((avg,self.name))
      
+     # this function form the list of the top 5 students from above_max threshold list
      @staticmethod
      def top_5():
           l=len(students.student_above_maximum_threshold)
@@ -50,21 +59,24 @@ class students:
                students.top_5_students=students.student_above_maximum_threshold[l-5:]
                students.top_5_students.reverse()
                return students.top_5_students
+    
 
+    # this function return the list of top 5 students
      @staticmethod
      def get_top_5():
           if students.top_5_students:
                return students.top_5_students
           else:
                return False
-
+     
+     # this function return the list of students who scored below minimum_threshold
      @staticmethod
      def get_minimum_list():
           if students.student_below_minimum_threshold:
                return students.student_below_minimum_threshold
           else:
                return False 
-     
+     # this function return the list of students who scored above maximum_threshold
      @staticmethod
      def get_maximum_list():
           if students.student_above_maximum_threshold:
@@ -72,6 +84,7 @@ class students:
           else:
                return False
      
+     # this function return the list of students who scored in between minimum_threshold and maximum threshold
      @staticmethod
      def get_in_between_minimum_maximum_list():
           if students.student_between_minimum_maximum_threshold:
@@ -79,18 +92,20 @@ class students:
           else:
                return False
           
-     
+     # this function return the top students based on average marks
      @staticmethod
      def top_performer():
           if students.top_5_students:
                return students.top_5_students[0]
           else:
                return False
-
+          
+     #  this function makes the list of the students who need personal attention
      def Personal_attention(self):
           if self.dsa_marks<=students.Personal_attention_threshold  or self.ml_marks<=students.Personal_attention_threshold or self.python_marks<=students.Personal_attention_threshold:
                students.Personal_attention_list.append(self.name)
 
+     # this function return the list of students who need personal attention
      @staticmethod
      def get_personal_attention_list():
           if students.Personal_attention_list:
@@ -103,43 +118,60 @@ class students:
      
 
      
-
+# main function
 if __name__=='__main__':
 
      obj_list=[]
 
-     try:
+     try:                            # enter the number of students records to enter
           n=int(input("enter the no. of students records to enter: "))
      except ValueError:
           print("Invalid Input")
           sys.exit()
 
      for obj in range(n):
+          while True:
+               try:           # initialising the attributes of the student objects like assinging them marks,name,age
+                    name=input("Enter the name: ")
+                    age=int(input("Enter the age (must be above 0 and less than 120): "))
+                    gender=input("enter the gender(must be male,female and other): ")
+                    python_marks=int(input("enter the python marks(must be between 0 and 100): "))
+                    dsa_marks=int(input("enter the dsa marks(must be between 0 and 100): "))
+                    ml_marks=int(input("enter the marks for machine learning(must be between 0 and 100): "))
 
-          
-          try:
-               name=input("Enter the name: ")
-               age=int(input("Enter the age: "))
-               gender=input("enter the gender: ")
-               python_marks=int(input("enter the python marks: "))
-               dsa_marks=int(input("enter the dsa marks: "))
-               ml_marks=int(input("enter the marks for machine learning: "))
-          except ValueError:
-               print("Invalid Input")
-               sys.exit()
+               except ValueError:
+                    print("Invalid Input")
+                    sys.exit()
+               
+               else:
+                    if (age in range(0,121)) and (gender.lower() in ['male','female','other']) and (python_marks in range(0,101)) and(dsa_marks in range(0,101)) and (ml_marks in range(0,101)):
+                         break
+                    else:
+                         print("invalid inputs in the record of student.")
           
 
           obj=students(name,age,gender,python_marks,dsa_marks,ml_marks)
-          obj_list.append(obj)
+          obj_list.append(obj)  # entering each record in a list
      
 
-     mi=int(input("enter the minmum threshold: "))
-     ma=int(input("enter the maximum threshold: "))
-     pa=int(input("enter the personal_attention threshold: "))
+     # entering the minimum and maximum thresholds for sorting
+     while True:
+          try:
+               mi=int(input("enter the minmum threshold: "))
+               ma=int(input("enter the maximum threshold: "))
+               pa=int(input("enter the personal_attention threshold: "))
+          except ValueError:
+               print("invalid input")
+          else:
+               if mi in range(0,101) and ma in range(0,101) and pa in range(0,101) and mi<ma and pa<=mi:
+                    break
+               else:
+                    print("in valid inputs in thresholds")
      students.set_maximum_minimum_threshold(mi,ma)
      students.set_personal_attention_threshold(pa)
 
-
+    
+     # performing sorting and personal_attention students on each student object in the obj_list
      for i in range(n):
           a1=obj_list[i]
           a1.sorting_students()
@@ -147,7 +179,7 @@ if __name__=='__main__':
      students.top_5()
 
      
-
+     # the layout of the program or menu of functions to perform
      while True:
           print("1. print top 5 students: ")
           print("2. print top performer: ")
