@@ -10,8 +10,11 @@
     <h1>Fill out the form!</h1>
     <div class="container">
       <form method="POST">
-          {{form.as_p}}
-          {% csrf_token %}
+          {{form.as_p}}      
+          <!-- .as_p will place form elements in like paragraph -->
+
+          {% csrf_token %} 
+          <!-- for securing input into the form -->
         <input type="submit" class="btn btn-primary" value="Submit">
       </form>
 
