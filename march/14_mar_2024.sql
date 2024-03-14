@@ -212,7 +212,9 @@ drop table employees;
 
 select e.FIRST_NAME,e.LAST_NAME,d.DEPARTMENT_ID,d.DEPARTMENT_NAME from employees as e join departments as d on e.DEPARTMENT_ID=d.DEPARTMENT_ID;
 
+-- 3.Write a MySQL query to find the name (first_name, last_name), job, department ID and name of the employees who works in London.
 select e.FIRST_NAME,e.LAST_NAME,e.JOB_ID,d.DEPARTMENT_ID,d.DEPARTMENT_NAME from employees as e join departments as d on e.DEPARTMENT_ID=d.DEPARTMENT_ID where d.LOCATION_ID=2400;
 
-select e.EMPLOYEE_ID as emp_id,e.LAST_NAME as employee,m.EMPLOYEE_ID as Mng_id,m.LAST_NAME as Manager from employees e join employees m on e.EMPLOYEE_ID=m.MANAGER_ID;
+-- 4.Write a MySQL query to find the employee id, name (last_name) along with their manager_id and name (last_name).
 
+select e.EMPLOYEE_ID as emp_id,e.LAST_NAME as employee,m.EMPLOYEE_ID as Mng_id,m.LAST_NAME as Manager from employees e join employees m on e.EMPLOYEE_ID=m.MANAGER_ID;
