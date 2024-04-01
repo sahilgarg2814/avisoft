@@ -1,11 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
-# Create your models here.
 
 class domain(models.Model):
     domain_name=models.CharField(max_length=1000)
@@ -13,50 +11,17 @@ class domain(models.Model):
     def __str__(self):
         return self.domain_name
 
+
 class UserProfileInfo(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
-
-    # # Add any additional attributes you want
-    # portfolio_site = models.URLField(blank=True)
-    # # pip install pillow to use this!
-    # # Optional: pip install pillow --global-option=”build_ext” --global-option=”--disable-jpeg”
-    # profile_pic = models.ImageField(upload_to='profile_pics',blank=True)
-
-    # def __str__(self):
-    #     # Built-in attribute of django.contrib.auth.models.User !
-    #     return self.user.username
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    domain=models.ForeignKey(domain,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user.username
-    
-    @property
-    def username(self):
-        return self.user.username
-    
-    @property
-    def password(self):
-        return self.user.password
-    
-    @property
-    def email(self):
-        return self.user.email
-    
-    @property
-    def first_name(self):
-        return self.user.first_name
-    
-    @property
-    def last_name(self):
-        return self.user.last_name
-    
-    domain=models.ForeignKey(domain,on_delete=models.CASCADE)
-    
-    # These are properties (decorated with @property) that allow you 
-    # to access the basic fields (username, password, email, first name, and last name) of 
-    # the associated User object directly from an instance of YourCustomModel. 
-    # Each property returns the corresponding field value of the associated User object
 
-class task(models.Model):
+class Task(models.Model):
     Assigned='A'
     Pending='P'
     Missed='M'
@@ -67,7 +32,7 @@ class task(models.Model):
         (Missed,'Miseed'),
         (Complete,'Complete')
     ]
-    task_number=models.IntegerField(primary_key=True,validators=[MinValueValidator(1)])
+    task_number=models.AutoField(primary_key=True,validators=[MinValueValidator(1)])
     task_description=models.TextField(max_length=5000)
     status=models.CharField(max_length=1,choices=Status_Choices,default=Assigned)
     Assigned_time=models.DateTimeField(auto_now_add=True)
@@ -76,18 +41,18 @@ class task(models.Model):
 
     def __str__(self):
         return f"{self.task_number}+{self.task_description}"
-    
 
 
-@receiver(post_save, sender=task)
+
+@receiver(post_save, sender=Task)
 def update_status(sender, instance, **kwargs):
-    if instance.status == task.Assigned and timezone.now() > instance.Assigned_time + timezone.timedelta(minutes=30):
-        instance.status = task.Pending
+    if instance.status == 'A' and timezone.now() > instance.Assigned_time + timezone.timedelta(minutes=30):
+        instance.status = 'P'
         instance.save()
-    elif instance.status == task.Pending and timezone.now() > instance.Assigned_time + timezone.timedelta(hours=2):
-        instance.status = task.Missed
+    elif instance.status == 'P' and timezone.now() > instance.Assigned_time + timezone.timedelta(hours=2):
+        instance.status = 'M'
         instance.save()
-    elif instance.status==task.Complete:
+    elif instance.status == 'C':
         pass
         
 

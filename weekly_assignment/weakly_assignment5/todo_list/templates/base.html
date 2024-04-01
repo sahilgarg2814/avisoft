@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO LIST</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        {# MEDIUM STYLE EDITOR#}
+        <script src="//cdn.jsdelivr.net/medium-editor/latest/js/medium-editor.min.js"></script>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/medium-editor/latest/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
+
+
+    </head>
+
+
+<body>
+
+
+  <nav class="navbar navbar-default techfont custom-navbar">
+    <div class="container">
+
+
+      <ul class="nav navbar-nav">
+        <li><a class='navbar-brand bigbrand' href="{% url 'base' %}">HOME</a></li>
+        <li><a href="{% url 'admin:index' %}">ADMIN</a></li>
+        {% if user.is_authenticated %}
+    <li class="nav-item"><a class="nav-link" href="{% url 'log_out' %}">Logout</a></li>
+{% else %}
+    <li class="nav-item"><a class="nav-link" href="{% url 'register_page' %}">Register</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url 'login_page' %}">Login</a></li>
+{% endif %}
+
+      </ul>
+      
+  </div>
+</nav>
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-dark text-white">
+    <div class="container">
+      <h1 class="display-4">Welcome to our TODO LIST!</h1>
+      <p class="lead">Complete your tasks on time!</p>
+  </div>
+{% endblock %}
+
+</body>
+</html>
