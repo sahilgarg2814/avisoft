@@ -1,16 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="container">
-    <div class="jumbotron">
-        <form method="post" action="{% url 'login_page' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Login</button>
-        </form>
-        {% if error_message %}
-            <p>{{ error_message }}</p>
-        {% endif %}
-    </div>
+<div class="container">
+  <div class="jumbotron">
+    <h1>Please Login</h1>
+
+      <form method="post" action="{% url 'login_page' %}">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" name="username" placeholder="Username">
+        <hr>
+
+        <label for="password">password</label>
+        <input type="password" name="password">
+        <hr>
+
+        <input type="submit" name="" value="Login">
+
+      </form>
+
   </div>
+</div>
 {% endblock %}

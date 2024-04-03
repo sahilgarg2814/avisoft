@@ -2,13 +2,16 @@
 
 {% block content %}
 <div class="container">
+<h1> {{ userfirstname }} {{ userlastname }}</h1>
+</div>
+<div class="container">
     <h1 class="mt-4">Assigned Tasks</h1>
     <hr>
     <div class="row">
         <div class="col-md-8 offset-md-2">
             <ul class="list-group">
                 {% for task in assigned_tasks %}
-                <li class="list-group-item">{{ task.task_number }}: {{ task.task_description }}</li>
+                <li class="list-group-item">{{ task.task_number }}: {{ task.task_description }}
                 {% endfor %}
             </ul>
         </div>

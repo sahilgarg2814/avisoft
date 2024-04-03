@@ -5,19 +5,20 @@ from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-class domain(models.Model):
-    domain_name=models.CharField(max_length=1000)
-
-    def __str__(self):
-        return self.domain_name
-
 
 class UserProfileInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    PYTHON = 'Python'
+    MERN = 'Mern'
+    JAVA = 'Java'
+    DOMAIN_CHOICES = [
+        (PYTHON, 'Python'),
+        (MERN, 'Mern'),
+        (JAVA, 'Java'),
+    ]
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    domain=models.ForeignKey(domain,on_delete=models.CASCADE)
-
+    domain=models.CharField(max_length=15,choices=DOMAIN_CHOICES)
     def __str__(self):
         return self.user.username
 
@@ -32,12 +33,21 @@ class Task(models.Model):
         (Missed,'Miseed'),
         (Complete,'Complete')
     ]
+
+    PYTHON = 'Python'
+    MERN = 'Mern'
+    JAVA = 'Java'
+    DOMAIN_CHOICES = [
+        (PYTHON, 'Python'),
+        (MERN, 'Mern'),
+        (JAVA, 'Java'),
+    ]
+
     task_number=models.AutoField(primary_key=True,validators=[MinValueValidator(1)])
     task_description=models.TextField(max_length=5000)
     status=models.CharField(max_length=1,choices=Status_Choices,default=Assigned)
     Assigned_time=models.DateTimeField(auto_now_add=True)
-
-    to_which_user=models.ForeignKey(UserProfileInfo,on_delete=models.CASCADE)
+    domain=models.CharField(max_length=15,choices=DOMAIN_CHOICES)
 
     def __str__(self):
         return f"{self.task_number}+{self.task_description}"

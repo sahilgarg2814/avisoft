@@ -1,11 +1,6 @@
 from django import forms
-from .models import domain, UserProfileInfo, Task
+from .models import UserProfileInfo, Task
 from django.contrib.auth.models import User
-
-class DomainForm(forms.ModelForm):
-    class Meta:
-        model = domain
-        fields = '__all__'
 
 class TaskForm(forms.ModelForm):
     class Meta:
@@ -14,7 +9,6 @@ class TaskForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta():
         model = User

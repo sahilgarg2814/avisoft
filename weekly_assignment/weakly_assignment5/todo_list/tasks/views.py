@@ -10,7 +10,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from tasks.forms import UserForm, UserProfileInfoForm
 from django.contrib.auth.decorators import login_required
-from tasks.models import Task,UserProfileInfo,domain
+from tasks.models import Task,UserProfileInfo
+from django.http import HttpResponseRedirect,HttpResponse
+from django.urls import reverse
 
 
 def base_page(request):
@@ -19,20 +21,21 @@ def base_page(request):
 
 def login_page(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request=request, data=request.POST)
-
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('todo_list')
-            else:
-                return render(request, 'login.html', {'form': form, 'error_message': 'Invalid login credentials.'})
+    
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        print("till correct1")
+        user = authenticate(username=username, password=password)
+        print(user)
+        print("till correct2")
+        if user:
+            print("till correct3")
+            login(request, user)
+            return redirect('todo_list')
+        else:
+            return render(request, 'login.html', {'error_message': 'Invalid username or password'})
     else:
-        form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+        return render(request, 'login.html')
 
 
 def register_page(request):
@@ -41,6 +44,8 @@ def register_page(request):
         user_profile_form = UserProfileInfoForm(request.POST)
         if user_form.is_valid() and user_profile_form.is_valid():
             user = user_form.save()
+            user.set_password(user.password)
+            user.save()
             profile = user_profile_form.save(commit=False)
             profile.user = user
             profile.save()
@@ -58,21 +63,18 @@ def log_out(request):
     logout(request)
     return redirect('base')
 
-
 @login_required
 def todo_list(request):
-    user_domain=request.user.userprofileinfo.domain.domain_name
-    assigned_tasks=Task.objects.filter(to_which_user__domain=user_domain)
-    context={
-        'assigned_task':assigned_tasks
-    }
-    return render(request,'todo.html',context)
+    
+    user_profile = request.user.userprofileinfo
 
+    
+    assigned_tasks = Task.objects.filter(domain=user_profile.domain)
 
-
-
-
-
+    context = {'assigned_tasks': assigned_tasks,
+               'userfirstname': user_profile.first_name,
+               'userlastname': user_profile.last_name}
+    return render(request, 'todo.html', context)
 
 
 
